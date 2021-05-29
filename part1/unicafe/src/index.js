@@ -19,30 +19,32 @@ const Statistics = ({ values }) => {
     <div>
       <h2>Statistics</h2>
       <table>
-        <tr>
-          <td><Statistic title='good' /></td>
-          <td><Statistic value={values.good} /></td>
-        </tr>
-        <tr>
-          <td><Statistic title='neutral' /></td>
-          <td><Statistic value={values.neutral} /></td>
-        </tr>
-        <tr>
-          <td><Statistic title='bad' /></td>
-          <td><Statistic value={values.bad} /></td>
-        </tr>
-        <tr>
-          <td><Statistic title='all' /></td>
-          <td><Statistic value={values.good + values.neutral + values.bad} /></td>
-        </tr>
-        <tr>
-          <td><Statistic title='average' /></td>
-          <td><Statistic value={isNaN(calcAverage()) ? '' : calcAverage() } /></td>
-        </tr>
-        <tr>
-          <td><Statistic title='positive' /></td>
-          <td><Statistic value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} /></td>
-        </tr>
+        <tbody>
+          <tr>
+            <td><Statistic title='good' /></td>
+            <td><Statistic value={values.good} /></td>
+          </tr>
+          <tr>
+            <td><Statistic title='neutral' /></td>
+            <td><Statistic value={values.neutral} /></td>
+          </tr>
+          <tr>
+            <td><Statistic title='bad' /></td>
+            <td><Statistic value={values.bad} /></td>
+          </tr>
+          <tr>
+            <td><Statistic title='all' /></td>
+            <td><Statistic value={values.good + values.neutral + values.bad} /></td>
+          </tr>
+          <tr>
+            <td><Statistic title='average' /></td>
+            <td><Statistic value={isNaN(calcAverage()) ? '' : calcAverage() } /></td>
+          </tr>
+          <tr>
+            <td><Statistic title='positive' /></td>
+            <td><Statistic value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} /></td>
+          </tr>
+        </tbody>
       </table>
     </div>
   )
