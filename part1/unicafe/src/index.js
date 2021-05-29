@@ -6,7 +6,7 @@ const RateButton = ({ title, onClick }) => {
   return <button onClick={onClick}>{title}</button>;
 }
 
-const RatingDisplay = ({ title, value }) => <p>{title}: {value}</p>;
+const Statistic = ({ title, value }) => <p>{title}: {value}</p>;
 
 const NotDisplayedStatistics = () => <p>No feedback given</p>
 
@@ -18,12 +18,12 @@ const Statistics = ({ values }) => {
   return (
     <div>
       <h2>Statistics</h2>
-      <RatingDisplay title='good' value={values.good} />
-      <RatingDisplay title='neutral' value={values.neutral} />
-      <RatingDisplay title='bad' value={values.bad} />
-      <RatingDisplay title='all' value={values.good + values.neutral + values.bad} />
-      <RatingDisplay title='average' value={isNaN(calcAverage()) ? '' : calcAverage() } />
-      <RatingDisplay title='positive' value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} />
+      <Statistic title='good' value={values.good} />
+      <Statistic title='neutral' value={values.neutral} />
+      <Statistic title='bad' value={values.bad} />
+      <Statistic title='all' value={values.good + values.neutral + values.bad} />
+      <Statistic title='average' value={isNaN(calcAverage()) ? '' : calcAverage() } />
+      <Statistic title='positive' value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} />
     </div>
   )
 }
