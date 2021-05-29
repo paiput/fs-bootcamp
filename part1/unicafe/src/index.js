@@ -35,8 +35,8 @@ const App = () => {
       <RatingDisplay title='bad' value={bad} />
       {/* <Statistics /> */}
       <RatingDisplay title='all' value={good + neutral + bad} />
-      <RatingDisplay title='average' value={calcAverage()} />
-      <RatingDisplay title='positive' value={calcPositive()} />
+      <RatingDisplay title='average' value={isNaN(calcAverage()) ? '' : calcAverage() } />
+      <RatingDisplay title='positive' value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} />
     </div>
   )
 }
