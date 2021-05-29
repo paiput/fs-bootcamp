@@ -3,20 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 const RateButton = ({ title, onClick }) => {
-  return <button onClick={onClick}>{title}</button>
+  return <button onClick={onClick}>{title}</button>;
 }
 
-const RatingDisplay = ({ title, value }) => <p>{title}: {value}</p>
+const RatingDisplay = ({ title, value }) => <p>{title}: {value}</p>;
+
+const Statistics = () => {
+  
+}
 
 const App = () => {
   // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  // const setRating = (quality) => {
+  const calcAverage = () => ((good - bad) / (good + neutral + bad)).toFixed(2);
 
-  // }
+  const calcPositive = () => good / (good + neutral + bad) 
 
   return (
     <div>
@@ -29,6 +33,10 @@ const App = () => {
       <RatingDisplay title='good' value={good} />
       <RatingDisplay title='neutral' value={neutral} />
       <RatingDisplay title='bad' value={bad} />
+      {/* <Statistics /> */}
+      <RatingDisplay title='all' value={good + neutral + bad} />
+      <RatingDisplay title='average' value={calcAverage()} />
+      <RatingDisplay title='positive' value={calcPositive()} />
     </div>
   )
 }
