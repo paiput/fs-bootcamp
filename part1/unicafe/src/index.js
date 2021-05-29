@@ -8,8 +8,21 @@ const RateButton = ({ title, onClick }) => {
 
 const RatingDisplay = ({ title, value }) => <p>{title}: {value}</p>;
 
-const Statistics = () => {
-  
+const Statistics = ({ values }) => {
+  const calcAverage = () => ((values.good - values.bad) / (values.good + values.neutral + values.bad)).toFixed(2);
+  const calcPositive = () => values.good / (values.good + values.neutral + values.bad)
+
+  return (
+    <div>
+      <h2>Statistics</h2>
+      <RatingDisplay title='good' value={values.good} />
+      <RatingDisplay title='neutral' value={values.neutral} />
+      <RatingDisplay title='bad' value={values.bad} />
+      <RatingDisplay title='all' value={values.good + values.neutral + values.bad} />
+      <RatingDisplay title='average' value={isNaN(calcAverage()) ? '' : calcAverage() } />
+      <RatingDisplay title='positive' value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} />
+    </div>
+  )
 }
 
 const App = () => {
@@ -18,9 +31,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const calcAverage = () => ((good - bad) / (good + neutral + bad)).toFixed(2);
-
-  const calcPositive = () => good / (good + neutral + bad) 
+ 
 
   return (
     <div>
@@ -29,14 +40,7 @@ const App = () => {
       <RateButton title='neutral' onClick={() => setNeutral(prevValue => prevValue + 1)} />
       <RateButton title='bad' onClick={() => setBad(prevValue => prevValue + 1)} />
       
-      <h2>Statistics</h2>
-      <RatingDisplay title='good' value={good} />
-      <RatingDisplay title='neutral' value={neutral} />
-      <RatingDisplay title='bad' value={bad} />
-      {/* <Statistics /> */}
-      <RatingDisplay title='all' value={good + neutral + bad} />
-      <RatingDisplay title='average' value={isNaN(calcAverage()) ? '' : calcAverage() } />
-      <RatingDisplay title='positive' value={isNaN(calcPositive()) ? '' : `${calcPositive()}%`} />
+      <Statistics values={{good, neutral, bad}}/>
     </div>
   )
 }
