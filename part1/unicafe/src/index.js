@@ -8,7 +8,10 @@ const RateButton = ({ title, onClick }) => {
 
 const RatingDisplay = ({ title, value }) => <p>{title}: {value}</p>;
 
+const NotDisplayedStatistics = () => <p>No feedback given</p>
+
 const Statistics = ({ values }) => {
+  
   const calcAverage = () => ((values.good - values.bad) / (values.good + values.neutral + values.bad)).toFixed(2);
   const calcPositive = () => values.good / (values.good + values.neutral + values.bad)
 
@@ -31,8 +34,6 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
- 
-
   return (
     <div>
       <h2>Give feedback</h2>
@@ -40,7 +41,9 @@ const App = () => {
       <RateButton title='neutral' onClick={() => setNeutral(prevValue => prevValue + 1)} />
       <RateButton title='bad' onClick={() => setBad(prevValue => prevValue + 1)} />
       
-      <Statistics values={{good, neutral, bad}}/>
+      {(good + neutral + bad === 0) 
+        ? <NotDisplayedStatistics /> 
+        : <Statistics values={{good, neutral, bad}} />}
     </div>
   )
 }
