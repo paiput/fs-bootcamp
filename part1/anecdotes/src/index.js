@@ -2,19 +2,30 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 
-const App = (props) => {
+const App = ({ anecdotes, votes }) => {
   const [selected, setSelected] = useState(0)
+  const [selectedVotes, setSelectedVotes] = useState([...votes])
 
   const changeAnecdote = () => {
     setSelected(anecdote => {
-      if (anecdote < props.anecdotes.length - 1) return anecdote + 1;
+      if (anecdote < anecdotes.length - 1) return anecdote + 1;
       return anecdote = 0;
     });
   }
-
+  
+  // console.log('selected:', selected)
+  console.log('votes:', selectedVotes)
+  console.log('selected votes:', selectedVotes[selected])
+  const changeVotes = () => setSelectedVotes(selectedVotes.map((vote, index) => {
+    if (index === selected) vote += 1;
+    return vote;
+  }))
+  
   return (
     <div>
-      <p>{props.anecdotes[selected]}</p>
+      <p>{anecdotes[selected]}</p>
+      <p>has {selectedVotes[selected]} votes</p>
+      <button onClick={changeVotes}>vote</button>
       <button onClick={changeAnecdote}>next anecdote</button>
     </div>
   )
@@ -29,7 +40,9 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
+const anecdotesVotes = Array(anecdotes.length).fill(0);
+
 ReactDOM.render(
-  <App anecdotes={anecdotes} />,
+  <App anecdotes={anecdotes} votes={anecdotesVotes} />,
   document.getElementById('root')
 )
