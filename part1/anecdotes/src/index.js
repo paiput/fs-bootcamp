@@ -9,24 +9,33 @@ const App = ({ anecdotes, votes }) => {
   const changeAnecdote = () => {
     setSelected(anecdote => {
       if (anecdote < anecdotes.length - 1) return anecdote + 1;
-      return anecdote = 0;
+      return 0;
     });
   }
   
   // console.log('selected:', selected)
-  console.log('votes:', selectedVotes)
-  console.log('selected votes:', selectedVotes[selected])
-  const changeVotes = () => setSelectedVotes(selectedVotes.map((vote, index) => {
+  // console.log('votes:', selectedVotes)
+  // console.log('selected votes:', selectedVotes[selected])
+  const changeVotes = () => setSelectedVotes([...selectedVotes].map((vote, index) => {
     if (index === selected) vote += 1;
     return vote;
   }))
+
+  const mostVoted = Math.max.apply(null, selectedVotes);
+  const mostVotedIndex = selectedVotes.indexOf(mostVoted)
+  // console.log('most voted votes:', mostVoted)
+  // console.log('most voted index:', mostVotedIndex)
   
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {selectedVotes[selected]} votes</p>
       <button onClick={changeVotes}>vote</button>
       <button onClick={changeAnecdote}>next anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      <p>{mostVoted > 0 ? anecdotes[mostVotedIndex] : 'No votes yet'}</p>
+      <p>{mostVoted > 0 ? `has ${mostVoted} votes`  : ''}</p>
     </div>
   )
 }
