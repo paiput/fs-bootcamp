@@ -20,18 +20,23 @@ const Content = ({ parts }) => {
   )
 }
 
-const Total = ({ parts }) => {
+const Total = ({ courseExercises }) => {
+
+  const totalExercises = courseExercises.reduce((acc, cur) => acc + cur)
+
   return (
-    <p>Complete later</p>
+    <p>
+      <strong>total of {totalExercises} exercises</strong>      
+    </p>
   )
 }
 
-const Course = ({ course }) => {
+const Course = ({ course, courseExercises }) => {
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts}/>
-      <Total exercises={course.parts} />
+      <Total courseExercises={courseExercises} />
     </div>
   )
 }
@@ -63,9 +68,10 @@ const App = () => {
       }
     ]
   }
+
+  const courseExercises = course.parts.map(part => part.exercises)
   
-  return <Course course={course} />
+  return <Course course={course} courseExercises={courseExercises} />
 }
 
 export default App;
-
