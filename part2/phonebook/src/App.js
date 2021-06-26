@@ -10,12 +10,25 @@ function App() {
     setNewName(e.target.value);
   }
 
+  // there are probably better ways to do this
+  const checkIfExits = (newPerson) => {
+    let isRepeated = false;
+    persons.forEach(person => {
+      if (person.name === newPerson.name) isRepeated = true
+    })
+    return isRepeated;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const nameToAdd = {
+    const personToAdd = {
       name: newName
     }
-    setPersons(persons => persons.concat(nameToAdd));
+    if (checkIfExits(personToAdd)) {
+      alert(`${personToAdd.name} is already added to phonebook`);
+    }else {
+      setPersons(persons => persons.concat(personToAdd));
+    }
     setNewName('');
   }
 
