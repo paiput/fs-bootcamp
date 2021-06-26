@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 
 function App() {
   const [persons, setPersons] = useState([
-    { 
-      name: 'Arto Hellas',
-      number: '040-1234567'
-    }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchedName, setSearchedName] = useState('');
+  const [personsToShow, setPersonsToShow] = useState([]);
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
@@ -41,10 +43,19 @@ function App() {
     setNewName('');
     setNewNumber('');
   }
+  
+  const handleNameSearch = (e) => {
+    const typedName = e.target.value.toLowerCase();
+    setSearchedName(e.target.value);
+    const foundPersons = persons.filter(person => person.name.toLowerCase().includes(typedName));
+    setPersonsToShow(foundPersons);
+  }
 
   return (
     <div className="App">
       <h2>PhoneBook</h2>
+      <p>filter shown with <input onChange={handleNameSearch} value={searchedName} /></p>
+      <h2>add a new</h2>
       <form>
         <div>name: <input onChange={handleNameChange} value={newName} /></div>
         <div>number: <input onChange={handleNumberChange} value={newNumber} /></div>
@@ -52,12 +63,26 @@ function App() {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => 
-          <li key={person.name}>
-            <p>Name: {person.name}</p>
-            <p>Number: {person.number}</p>
-          </li>
-        )}
+        {searchedName
+          ? personsToShow.map(person => (
+            <li key={person.name}>
+              <p>
+                <strong>Name: </strong>{person.name}
+                <br />
+                <strong>Number: </strong>{person.number}
+              </p>
+            </li>
+          ))
+          : persons.map(person => (
+            <li key={person.name}>
+              <p>
+                <strong>Name: </strong>{person.name}
+                <br />
+                <strong>Number: </strong>{person.number}
+              </p>
+            </li>
+          ))
+        }
       </ul>
     </div>
   );
