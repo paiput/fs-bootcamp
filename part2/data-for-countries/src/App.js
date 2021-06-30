@@ -28,12 +28,10 @@ const App = () => {
       {
         loading
           ? <p>Loading countries...</p>
-          : (
-              <>
-                <p>find countries: <input onChange={handleCountrySearch} /></p>
-                <CountriesToShow countries={selectedCountries} />
-              </>
-            )
+          : <>
+              <p>find countries: <input onChange={handleCountrySearch} /></p>
+              <CountriesToShow countries={selectedCountries} />
+            </>
       }
     </div>
   )
