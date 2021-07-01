@@ -5,7 +5,6 @@ export const DisplayableCountries = ({ countries }) => {
   const [selectedCountry, setSelectedCountry] = useState('');
 
   const handleCountrySelection = (country) => {
-    console.log(country);
     setSelectedCountry(country);
   }
   

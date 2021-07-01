@@ -4,6 +4,7 @@ import { CountriesToShow } from "./components/CountriesToShow";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
+  // const [weather, setWeather] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [loading, setLoading] = useState(false);
 
