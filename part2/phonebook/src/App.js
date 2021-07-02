@@ -14,7 +14,7 @@ function App() {
   useEffect(() => {
     axios.get('http://localhost:3001/persons')
       .then(res => {
-        console.log(res.data);
+        console.log('data fetched');
         setPersons(res.data);
       });
   }, []);
@@ -45,7 +45,10 @@ function App() {
     if (checkIfExits(personToAdd)) {
       alert(`${personToAdd.name} is already added to phonebook`);
     }else {
-      setPersons(persons => persons.concat(personToAdd));
+      axios.post('http://localhost:3001/persons', personToAdd)
+        .then(res => {
+          setPersons(persons => persons.concat(res.data));
+        });
     }
     setNewName('');
     setNewNumber('');
