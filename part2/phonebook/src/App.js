@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { PersonsToShow } from './components/PersonsToShow';
-import axios from 'axios';
+import noteService from './services/notes';
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -12,11 +12,11 @@ function App() {
   const [selectedPersons, setSelectedPersons] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(res => {
-        console.log('data fetched');
-        setPersons(res.data);
-      });
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setPersons(initialNotes);
+      })
   }, []);
 
   const handleNameChange = (e) => {
@@ -27,7 +27,6 @@ function App() {
     setNewNumber(e.target.value);
   }
 
-  // there are probably better ways to do this
   const checkIfExits = (newPerson) => {
     let isRepeated = false;
     persons.forEach(person => {
@@ -45,10 +44,11 @@ function App() {
     if (checkIfExits(personToAdd)) {
       alert(`${personToAdd.name} is already added to phonebook`);
     }else {
-      axios.post('http://localhost:3001/persons', personToAdd)
-        .then(res => {
-          setPersons(persons => persons.concat(res.data));
-        });
+      noteService
+        .create(personToAdd)
+        .then(newPerson => {
+          setPersons(persons.concat(newPerson));
+        })
     }
     setNewName('');
     setNewNumber('');
