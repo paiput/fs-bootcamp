@@ -27,7 +27,7 @@ function App() {
     setNewNumber(e.target.value);
   }
 
-  const checkIfExits = (newPerson) => {
+  const checkIfExists = (newPerson) => {
     let isRepeated = false;
     persons.forEach(person => {
       if (person.name === newPerson.name) isRepeated = true;
@@ -41,8 +41,17 @@ function App() {
       name: newName,
       number: newNumber
     }
-    if (checkIfExits(personToAdd)) {
-      alert(`${personToAdd.name} is already added to phonebook`);
+    if (checkIfExists(personToAdd)) {
+      if (window.confirm(`${personToAdd.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const personToEdit = persons.filter(person => person.name === personToAdd.name)[0];
+        // console.log('Person to edit:', personToEdit)
+        noteService
+          .update(personToEdit.id, personToAdd) // second parameter is the whole object that will replace the personToEdit
+          .then(newPerson => {
+            // console.log('Number edited succesfully:', newPerson.data);
+            setPersons(persons.map(person => person === personToEdit ? newPerson.data : person));
+          });
+      }
     }else {
       noteService
         .create(personToAdd)

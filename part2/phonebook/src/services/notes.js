@@ -19,6 +19,11 @@ const remove = (id) => {
   });
 }
 
-const exportedServices = { getAll, create, remove };
+const update = (id, object) => {
+  const request = axios.put(`${baseUrl}/${id}`, object);
+  return request.then(res => res);
+}
+
+const exportedServices = { getAll, create, remove, update };
 
 export default exportedServices;
