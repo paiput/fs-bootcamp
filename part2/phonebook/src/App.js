@@ -53,6 +53,15 @@ function App() {
     setNewName('');
     setNewNumber('');
   }
+
+  const handleRemove = (target) => {
+    if (window.confirm(`Delete ${target.name}?`)) {
+      noteService
+        .remove(target.id);
+    } else return;
+    setPersons(persons.filter(person => person !== target));
+    setSearchedName(''); // to return to the full list if the person was searched before being deleted
+  }
   
   const handleNameSearch = (e) => {
     const typedName = e.target.value.toLowerCase();
@@ -76,8 +85,8 @@ function App() {
       <h2>Numbers</h2>
       <ul>
         {searchedName
-          ? <PersonsToShow persons={selectedPersons} />
-          : <PersonsToShow persons={persons} />
+          ? <PersonsToShow persons={selectedPersons} handleRemove={handleRemove} />
+          : <PersonsToShow persons={persons} handleRemove={handleRemove} />
         }
       </ul>
     </div>

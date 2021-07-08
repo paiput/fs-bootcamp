@@ -1,4 +1,4 @@
-export const PersonsToShow = ({ persons }) => {
+export const PersonsToShow = ({ persons, handleRemove }) => {  
   return (
     persons.map(person => (
       <li key={person.name}>
@@ -7,6 +7,7 @@ export const PersonsToShow = ({ persons }) => {
           <br />
           <strong>Number: </strong>{person.number}
         </p>
+        <button onClick={() => handleRemove(person)}>delete</button>
       </li>
     ))
   );
