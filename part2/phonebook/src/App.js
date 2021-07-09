@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { PersonsToShow } from './components/PersonsToShow';
+import { Notification } from './components/Notification';
 import noteService from './services/notes';
 
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [searchedName, setSearchedName] = useState('');
   const [selectedPersons, setSelectedPersons] = useState([]);
 
@@ -50,6 +53,10 @@ function App() {
           .then(newPerson => {
             // console.log('Number edited succesfully:', newPerson.data);
             setPersons(persons.map(person => person === personToEdit ? newPerson.data : person));
+            setSuccessMessage(`${newPerson.name}'s number edited succesfully`);
+            setTimeout(() => {
+              setSuccessMessage('');
+            }, 2000);
           });
       }
     }else {
@@ -57,7 +64,11 @@ function App() {
         .create(personToAdd)
         .then(newPerson => {
           setPersons(persons.concat(newPerson));
-        })
+          setSuccessMessage(`Added ${newPerson.name}`);
+          setTimeout(() => {
+            setSuccessMessage('');
+          }, 2000);
+        });
     }
     setNewName('');
     setNewNumber('');
@@ -82,6 +93,7 @@ function App() {
   return (
     <div className="App">
       <h2>PhoneBook</h2>
+      <Notification message={successMessage} />
       <Filter handleNameSearch={handleNameSearch} searchedName={searchedName}/>
       <h2>add a new</h2>
       <PersonForm 

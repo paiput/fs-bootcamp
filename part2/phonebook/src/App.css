@@ -1,0 +1,14 @@
+.success-message {
+  background-color: #55AA55;
+  color: #155515;
+  border: 3px solid #155515;
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: .25rem 1rem;
+}
+
+button:hover {
+  cursor: pointer;
+}
