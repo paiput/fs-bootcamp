@@ -4,8 +4,8 @@ export const Notification = ({ message }) => {
   }
 
   return (
-    <div className="success-message">
-      {message}
-    </div>
+    message.toLowerCase().includes('error')
+      ? <div className="error-message">{message}</div>
+      : <div className="success-message">{message}</div>
   )
 };

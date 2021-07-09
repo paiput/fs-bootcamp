@@ -10,7 +10,7 @@ function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
   const [searchedName, setSearchedName] = useState('');
   const [selectedPersons, setSelectedPersons] = useState([]);
 
@@ -53,10 +53,15 @@ function App() {
           .then(newPerson => {
             // console.log('Number edited succesfully:', newPerson.data);
             setPersons(persons.map(person => person === personToEdit ? newPerson.data : person));
-            setSuccessMessage(`${newPerson.name}'s number edited succesfully`);
+            setInfoMessage(`${newPerson.name}'s number edited succesfully`);
             setTimeout(() => {
-              setSuccessMessage('');
+              setInfoMessage('');
             }, 2000);
+          })
+          .catch(err => {
+            setTimeout(() => {
+              setInfoMessage(`Error: Information of ${personToAdd.name} has already been removed from server`);
+            }, 3000);
           });
       }
     }else {
@@ -64,9 +69,9 @@ function App() {
         .create(personToAdd)
         .then(newPerson => {
           setPersons(persons.concat(newPerson));
-          setSuccessMessage(`Added ${newPerson.name}`);
+          setInfoMessage(`Added ${newPerson.name}`);
           setTimeout(() => {
-            setSuccessMessage('');
+            setInfoMessage('');
           }, 2000);
         });
     }
@@ -93,7 +98,7 @@ function App() {
   return (
     <div className="App">
       <h2>PhoneBook</h2>
-      <Notification message={successMessage} />
+      <Notification message={infoMessage} />
       <Filter handleNameSearch={handleNameSearch} searchedName={searchedName}/>
       <h2>add a new</h2>
       <PersonForm 

@@ -9,6 +9,17 @@
   padding: .25rem 1rem;
 }
 
+.error-message {
+  background-color: #AA5555;
+  color: #551515;
+  border: 3px solid #551515;
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: .25rem 1rem;
+}
+
 button:hover {
   cursor: pointer;
 }
