@@ -53,6 +53,18 @@ app.post('/api/persons', (req, res) => {
     name: person.name,
     number: person.number
   };
+
+  if (!personToAdd.name || !personToAdd.number) {
+    res.status(400).send({ error: 'The name or number is missing' });
+    return;
+  };
+  
+  const repeatedData = persons.filter(person => person.name === personToAdd.name || person.number === personToAdd.number);
+  if (repeatedData.length > 0) {
+    res.status(400).send({ error: 'The name or number already exists in the phonebook' });
+    return;
+  };
+
   persons = persons.concat(personToAdd);
   res.json(personToAdd);
 });
