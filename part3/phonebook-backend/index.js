@@ -4,7 +4,28 @@ const express = require('express');
 const app = express();
 
 app.use(express.json());
-app.use(morgan('tiny'));
+
+morgan.token('req-data', (req) => JSON.stringify(req.body));
+
+const customFormat = morgan((tokens, req, res) => {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    tokens['req-data'](req)
+  ].join(' ')
+}, {
+  skip: function (req, res) { return res.statusCode !== 201 }
+});
+
+// logs a custom format with the data sent only in HTTP POST requests
+app.use(customFormat);
+// logs the tiny format for the rest of the requests 
+app.use(morgan('tiny', {
+  skip: function (req, res) { return res.statusCode === 201 }
+}));
 
 let persons = [
   { 
@@ -69,7 +90,7 @@ app.post('/api/persons', (req, res) => {
   };
 
   persons = persons.concat(personToAdd);
-  res.json(personToAdd);
+  res.status(201).json(personToAdd);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
