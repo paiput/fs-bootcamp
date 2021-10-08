@@ -1,5 +1,7 @@
+require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -28,31 +30,23 @@ app.use(morgan('tiny', {
   skip: function (req, res) { return res.statusCode === 201 }
 }));
 
-let persons = [
-  { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-];
+const db = process.env.MONGODB_URI;
+
+mongoose.connect(db)
+.then(res => {
+  console.log('Connected to MongoDB');
+})
+.catch(err => {
+  console.log('Error connecting to MongoDB', err.message);
+});
+
+const PhonebookEntry = require('./models/PhonebookEntry');
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  PhonebookEntry.find({})
+    .then(notes => {
+      res.json(notes);
+    });
 });
 
 app.get('/info', (req, res) => {
@@ -96,7 +90,6 @@ app.post('/api/persons', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
-  // console.log(id, typeof id);
   persons = persons.filter(person => person.id !== id);
   res.status(204).end();
 });
