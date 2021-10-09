@@ -44,8 +44,11 @@ const PhonebookEntry = require('./models/PhonebookEntry');
 
 app.get('/api/persons', (req, res) => {
   PhonebookEntry.find({})
-    .then(notes => {
-      res.json(notes);
+    .then(persons => {
+      res.json(persons);
+    })
+    .catch(err => {
+      console.log(err);
     });
 });
 
@@ -55,37 +58,49 @@ app.get('/info', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
-  const person = persons.find(person => person.id === id);
-  
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  };
+  PhonebookEntry.findById(id)
+    .then(person => {
+      res.json(person);
+    })
+    .catch(err => {
+      res.status(404).end();
+    });
 });
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body;
-  const personId = Math.floor(Math.random() * 1000);
-  const personToAdd = {
-    id: personId,
-    name: person.name,
-    number: person.number
-  };
-
+  const { name, number } = req.body;
+  
   if (!personToAdd.name || !personToAdd.number) {
     res.status(400).send({ error: 'The name or number is missing' });
-    return;
-  };
-  
-  const repeatedData = persons.filter(person => person.name === personToAdd.name || person.number === personToAdd.number);
-  if (repeatedData.length > 0) {
-    res.status(400).send({ error: 'The name or number already exists in the phonebook' });
-    return;
   };
 
-  persons = persons.concat(personToAdd);
-  res.status(201).json(personToAdd);
+  const personToAdd = new PhonebookEntry ({
+    name,
+    number
+  });
+
+  PhonebookEntry.find({
+    $or: [
+      { name: { $eq: personToAdd.name } }, 
+      { number: { $eq: personToAdd.number } }
+    ]
+  }).then(person => {
+      if (person) {
+        res.status(400).send({ error: 'The name or number already exists in the phonebook' });  
+      } else {
+        personToAdd.save()
+          .then((err, savedPerson) => {
+            if (err) {
+              console.log(err);
+              res.status(500).end();
+            }
+            res.status(201).json(savedPerson);
+          });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
