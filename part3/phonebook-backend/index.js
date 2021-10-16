@@ -60,10 +60,15 @@ app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   PhonebookEntry.findById(id)
     .then(person => {
-      res.json(person);
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
     })
     .catch(err => {
-      res.status(404).end();
+      console.log(err);
+      res.status(400).send({ error: 'Malformatted id '});
     });
 });
 
@@ -104,9 +109,14 @@ app.post('/api/persons', (req, res) => {
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter(person => person.id !== id);
-  res.status(204).end();
+  PhonebookEntry.findByIdAndDelete(req.params.id)
+    .then(result => {
+      res.status(204).end();
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).send({ error: 'malformatted id' });
+    });
 });
 
 const unknownEndpoint = (req, res) => {
