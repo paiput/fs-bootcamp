@@ -54,7 +54,7 @@ app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`);
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = Number(req.params.id);
   PhonebookEntry.findById(id)
     .then(person => {
@@ -67,7 +67,7 @@ app.get('/api/persons/:id', (req, res) => {
     .catch(err => next(err));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
   
   if (!personToAdd.name || !personToAdd.number) {
@@ -101,7 +101,19 @@ app.post('/api/persons', (req, res) => {
     .catch(err => next(err));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
+  const person = {
+    name: req.body.name,
+    number: req.body.number
+  };
+  PhonebookEntry.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson);
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/persons/:id', (req, res, next) => {
   PhonebookEntry.findByIdAndDelete(req.params.id)
     .then(result => {
       res.status(204).end();
