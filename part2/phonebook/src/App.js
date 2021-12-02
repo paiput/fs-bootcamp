@@ -54,8 +54,10 @@ function App() {
             }, 2000);
           })
           .catch(err => {
+            const errorMsg = err.response.data.error;
+            setInfoMessage(`Error: ${errorMsg}`);
             setTimeout(() => {
-              setInfoMessage(`Error: Information of ${personToAdd.name} has already been removed from server`);
+              setInfoMessage('');
             }, 3000);
           });
       }
@@ -68,6 +70,13 @@ function App() {
           setTimeout(() => {
             setInfoMessage('');
           }, 2000);
+        })
+        .catch(err => {
+          const errorMsg = err.response.data.error;
+          setInfoMessage(`Error: ${errorMsg}`);
+          setTimeout(() => {
+            setInfoMessage('');
+          }, 7000);
         });
     }
     setNewName('');

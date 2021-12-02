@@ -94,7 +94,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     name: req.body.name,
     number: req.body.number
   };
-  PhonebookEntry.findByIdAndUpdate(req.params.id, person, { new: true })
+  PhonebookEntry.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true })
     .then(updatedPerson => {
       res.json(updatedPerson);
     })

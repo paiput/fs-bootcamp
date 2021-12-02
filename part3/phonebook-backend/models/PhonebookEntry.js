@@ -4,11 +4,13 @@ const uniqueValidator = require('mongoose-unique-validator');
 const phonebookEntrySchema = new Schema({
   name: {
     type: String,
+    minlength: 3,
     required: true,
     unique: true
   },
   number: {
     type: String,
+    minlength: 8,
     required: true,
     unique: true
   }
