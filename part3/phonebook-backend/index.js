@@ -77,25 +77,14 @@ app.post('/api/persons', (req, res, next) => {
     return res.status(400).send({ error: 'The name or number is missing' });
   };
 
-  PhonebookEntry.find({
-    $or: [
-      { name: { $eq: name } }, 
-      { number: { $eq: number } }
-    ]
-  }).then(person => {
-      if (person.length > 0) {
-        return res.status(400).send({ error: 'The name or number already exists in the phonebook' });  
-      } else {
-        const personToAdd = new PhonebookEntry ({
-          name,
-          number
-        });
-        personToAdd.save()
-          .then(savedPerson => {
-            res.status(201).json(savedPerson);
-          })
-          .catch(err => next(err));
-      }
+  const personToAdd = new PhonebookEntry ({
+    name,
+    number
+  });
+
+  personToAdd.save()
+    .then(savedPerson => {
+      res.status(201).json(savedPerson);
     })
     .catch(err => next(err));
 });
@@ -131,6 +120,8 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).send({ error: err.message });
   }
 
   next(err);
