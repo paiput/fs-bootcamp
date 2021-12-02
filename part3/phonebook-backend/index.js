@@ -70,32 +70,28 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
   
-  if (!personToAdd.name || !personToAdd.number) {
-    res.status(400).send({ error: 'The name or number is missing' });
+  if (!name || !number) {
+    return res.status(400).send({ error: 'The name or number is missing' });
   };
-
-  const personToAdd = new PhonebookEntry ({
-    name,
-    number
-  });
 
   PhonebookEntry.find({
     $or: [
-      { name: { $eq: personToAdd.name } }, 
-      { number: { $eq: personToAdd.number } }
+      { name: { $eq: name } }, 
+      { number: { $eq: number } }
     ]
   }).then(person => {
-      if (person) {
-        res.status(400).send({ error: 'The name or number already exists in the phonebook' });  
+      if (person.length > 0) {
+        return res.status(400).send({ error: 'The name or number already exists in the phonebook' });  
       } else {
+        const personToAdd = new PhonebookEntry ({
+          name,
+          number
+        });
         personToAdd.save()
-          .then((err, savedPerson) => {
-            if (err) {
-              console.log(err);
-              res.status(500).end();
-            }
+          .then(savedPerson => {
             res.status(201).json(savedPerson);
-          });
+          })
+          .catch(err => next(err));
       }
     })
     .catch(err => next(err));
