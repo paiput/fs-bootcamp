@@ -4,7 +4,7 @@ import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { PersonsToShow } from './components/PersonsToShow';
 import { Notification } from './components/Notification';
-import noteService from './services/notes';
+import phonebookService from './services/phonebook';
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -15,10 +15,10 @@ function App() {
   const [selectedPersons, setSelectedPersons] = useState([]);
 
   useEffect(() => {
-    noteService
+    phonebookService
       .getAll()
-      .then(initialNotes => {
-        setPersons(initialNotes);
+      .then(phonebookEntries => {
+        setPersons(phonebookEntries);
       })
   }, []);
 
@@ -48,7 +48,7 @@ function App() {
       if (window.confirm(`${personToAdd.name} is already added to phonebook, replace the old number with a new one?`)) {
         const personToEdit = persons.filter(person => person.name === personToAdd.name)[0];
         // console.log('Person to edit:', personToEdit)
-        noteService
+        phonebookService
           .update(personToEdit.id, personToAdd) // second parameter is the whole object that will replace the personToEdit
           .then(newPerson => {
             // console.log('Number edited succesfully:', newPerson.data);
@@ -65,7 +65,7 @@ function App() {
           });
       }
     }else {
-      noteService
+      phonebookService
         .create(personToAdd)
         .then(newPerson => {
           setPersons(persons.concat(newPerson));
@@ -81,8 +81,8 @@ function App() {
 
   const handleRemove = (target) => {
     if (window.confirm(`Delete ${target.name}?`)) {
-      noteService
-        .remove(target.id);
+      phonebookService
+        .remove(target._id);
     } else return;
     setPersons(persons.filter(person => person !== target));
     setSearchedName(''); // to return to the full list if the person was searched before being deleted
