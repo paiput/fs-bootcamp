@@ -10,35 +10,33 @@ app.use(express.json());
 
 morgan.token('req-data', (req) => JSON.stringify(req.body));
 
-const customFormat = morgan((tokens, req, res) => {
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    tokens['req-data'](req)
-  ].join(' ')
-}, {
-  skip: function (req, res) { return res.statusCode !== 201 }
+const customFormat = morgan((tokens, req, res) => [
+  tokens.method(req, res),
+  tokens.url(req, res),
+  tokens.status(req, res),
+  tokens.res(req, res, 'content-length'), '-',
+  tokens['response-time'](req, res), 'ms',
+  tokens['req-data'](req),
+].join(' '), {
+  skip: (req, res) => res.statusCode !== 201,
 });
 
 // logs a custom format with the data sent only in HTTP POST requests
 app.use(customFormat);
-// logs the tiny format for the rest of the requests 
+// logs the tiny format for the rest of the requests
 app.use(morgan('tiny', {
-  skip: function (req, res) { return res.statusCode === 201 }
+  skip: function (req, res) { return res.statusCode === 201; }
 }));
 
 const db = process.env.MONGODB_URI;
 
 mongoose.connect(db)
-.then(res => {
-  console.log('Connected to MongoDB');
-})
-.catch(err => {
-  console.log('Error connecting to MongoDB', err.message);
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch(err => {
+    console.log('Error connecting to MongoDB', err.message);
+  });
 
 const PhonebookEntry = require('./models/PhonebookEntry');
 
@@ -50,7 +48,7 @@ app.get('/api/persons', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   PhonebookEntry.find({})
     .then(persons => {
       res.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`);
@@ -72,10 +70,10 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
-  
+
   if (!name || !number) {
     return res.status(400).send({ error: 'The name or number is missing' });
-  };
+  }
 
   const personToAdd = new PhonebookEntry ({
     name,
@@ -103,7 +101,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   PhonebookEntry.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end();
     })
     .catch(err => next(err));
