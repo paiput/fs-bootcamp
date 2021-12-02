@@ -51,12 +51,15 @@ app.get('/api/persons', (req, res, next) => {
 });
 
 app.get('/info', (req, res) => {
-  res.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`);
+  PhonebookEntry.find({})
+    .then(persons => {
+      res.send(`<p>Phonebook has info of ${persons.length} people</p><p>${new Date()}</p>`);
+    })
+    .catch(err => next(err));
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
-  const id = Number(req.params.id);
-  PhonebookEntry.findById(id)
+  PhonebookEntry.findById(req.params.id)
     .then(person => {
       if (person) {
         res.json(person);
