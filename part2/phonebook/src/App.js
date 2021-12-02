@@ -31,10 +31,7 @@ function App() {
   }
 
   const checkIfExists = (newPerson) => {
-    let isRepeated = false;
-    persons.forEach(person => {
-      if (person.name === newPerson.name) isRepeated = true;
-    })
+    const isRepeated = persons.some(person => person.name === newPerson.name);
     return isRepeated;
   }
 
@@ -47,11 +44,9 @@ function App() {
     if (checkIfExists(personToAdd)) {
       if (window.confirm(`${personToAdd.name} is already added to phonebook, replace the old number with a new one?`)) {
         const personToEdit = persons.filter(person => person.name === personToAdd.name)[0];
-        // console.log('Person to edit:', personToEdit)
         phonebookService
-          .update(personToEdit.id, personToAdd) // second parameter is the whole object that will replace the personToEdit
+          .update(personToEdit._id, personToAdd) // second parameter is the whole object that will replace the personToEdit
           .then(newPerson => {
-            // console.log('Number edited succesfully:', newPerson.data);
             setPersons(persons.map(person => person === personToEdit ? newPerson.data : person));
             setInfoMessage(`${newPerson.name}'s number edited succesfully`);
             setTimeout(() => {
@@ -64,7 +59,7 @@ function App() {
             }, 3000);
           });
       }
-    }else {
+    } else {
       phonebookService
         .create(personToAdd)
         .then(newPerson => {
