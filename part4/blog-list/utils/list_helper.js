@@ -13,7 +13,23 @@ const totalLikes = (blogs) => {
   return totalLikes;
 };
 
+const favoriteBlogs = (blogs) => {
+  const likes = blogs.map(blog => blog.likes);
+  const sortedLikes = likes.sort((a, b) => b - a);
+  const mostLikes = sortedLikes[0];
+  const favoriteBlogs = blogs.filter(blog => blog.likes === mostLikes);
+  
+  return (
+    favoriteBlogs.map(blog => ({
+      title: blog.title,
+      author: blog.author,
+      likes: blog.likes
+    }))
+  );
+};
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlogs
 };
