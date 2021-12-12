@@ -77,3 +77,20 @@ describe('favorite blog/s', () => {
     });
   });
 });
+
+describe('author with the most blogs', () => {
+  test('of empty list is null', () => {
+    const result = listHelper.mostBlogs(emptyBlogList);
+    expect(result).toBe(null);
+  });
+
+  test('of list with one blog is that same actor', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', blogs: 1 });
+  });
+  
+  test('of bigger list is found correctly', () => {
+    const result = listHelper.mostBlogs(blogList);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', blogs: 2 });
+  });
+});

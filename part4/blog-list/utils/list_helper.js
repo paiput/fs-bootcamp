@@ -28,8 +28,40 @@ const favoriteBlogs = (blogs) => {
   );
 };
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return null;
+  }
+
+  let authors = [];
+  blogs.forEach((blog) => {
+    if (authors.some((author) => author === blog.author)) {
+      return;
+    } else {
+      return authors.push(blog.author);
+    }
+  });
+
+  const authorsInfo = [];
+
+  authors.forEach((author) => {
+    let blogCounter = 0;
+    blogs.forEach((blog) => {
+      if (blog.author === author) {
+        blogCounter += 1;   
+      }
+    });
+    if (!authorsInfo.some((author) => author.blogs > blogCounter)) {
+      authorsInfo[0] = { author, blogs: blogCounter }
+    }
+  });
+
+  return authorsInfo[0];
+};
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlogs
+  favoriteBlogs,
+  mostBlogs
 };
