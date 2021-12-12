@@ -84,7 +84,7 @@ describe('author with the most blogs', () => {
     expect(result).toBe(null);
   });
 
-  test('of list with one blog is that same actor', () => {
+  test('of list with one blog is that same author', () => {
     const result = listHelper.mostBlogs(listWithOneBlog);
     expect(result).toEqual({ author: 'Edsger W. Dijkstra', blogs: 1 });
   });
@@ -92,5 +92,22 @@ describe('author with the most blogs', () => {
   test('of bigger list is found correctly', () => {
     const result = listHelper.mostBlogs(blogList);
     expect(result).toEqual({ author: 'Edsger W. Dijkstra', blogs: 2 });
+  });
+});
+
+describe('author with the most likes', () => {
+  test('of empty list is null', () => {
+    const result = listHelper.mostLikes(emptyBlogList);
+    expect(result).toBe(null);
+  });
+
+  test('of list with one blog is that same author', () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', likes: 5 });
+  });
+
+  test('of bigger list is found correctly', () => {
+    const result = listHelper.mostLikes(blogList);
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', likes: 17 });
   });
 });
