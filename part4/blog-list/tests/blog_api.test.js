@@ -56,6 +56,32 @@ test('a valid blog can be created', async () => {
   expect(updatedBlogsTitles).toContain('Creativity Is a Process, Not an Event');
 });
 
+test('likes default value is set to 0', async () => {
+  // new blog without likes property
+  const newBlog = {
+    title: 'How Innovative Ideas Arise',
+    author: 'James Clear',
+    url: 'https://jamesclear.com/dont-start-from-scratch'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedBlogs = await helper.getAllBlogs();
+  expect(updatedBlogs).toHaveLength(helper.initialBogs.length + 1);
+
+  const updatedBlogList = updatedBlogs.map((blog) => {
+    return {
+      title: blog.title,
+      likes: blog.likes
+    }
+  })
+  expect(updatedBlogList).toContainEqual({ title: 'How Innovative Ideas Arise', likes: 0 });
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
