@@ -56,7 +56,7 @@ test('a valid blog can be created', async () => {
   expect(updatedBlogsTitles).toContain('Creativity Is a Process, Not an Event');
 });
 
-test('likes default value is set to 0', async () => {
+test('likes default value of new blog is set to 0', async () => {
   // new blog without likes property
   const newBlog = {
     title: 'How Innovative Ideas Arise',
@@ -80,6 +80,18 @@ test('likes default value is set to 0', async () => {
     }
   })
   expect(updatedBlogList).toContainEqual({ title: 'How Innovative Ideas Arise', likes: 0 });
+});
+
+test('if title AND url are missing returns status code 400 bad request', async () => {
+  const newBlog = {
+    author: 'James Clear',
+    likes: 32
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 });
 
 afterAll(() => {
