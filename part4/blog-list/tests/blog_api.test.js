@@ -35,6 +35,27 @@ test('unique identifier property of blog is named id', async () => {
   expect(exampleBlog.id).toBeDefined();
 });
 
+test('a valid blog can be created', async () => {
+  const newBlog = {
+    title: 'Creativity Is a Process, Not an Event',
+    author: 'James Clear',
+    url: 'https://jamesclear.com/creative-thinking',
+    likes: 50
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedBlogs = await helper.getAllBlogs();
+  expect(updatedBlogs).toHaveLength(helper.initialBogs.length + 1);
+
+  const updatedBlogsTitles = updatedBlogs.map(blog => blog.title);
+  expect(updatedBlogsTitles).toContain('Creativity Is a Process, Not an Event');
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
