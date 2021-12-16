@@ -94,6 +94,15 @@ test('if title AND url are missing returns status code 400 bad request', async (
     .expect(400)
 });
 
+test('a specific blog can be deleted', async () => {
+  const response = await api.get('/api/blogs');
+  const blog = response.body[0];
+
+  await api
+    .delete(`/api/blogs/${blog.id}`)
+    .expect(204);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
