@@ -44,7 +44,13 @@ const getAllBlogs = async () => {
   return blogs;
 };
 
+const getBlog = async (id) => {
+  const blog = await Blog.findById(id);
+  return blog;
+};
+
 module.exports = {
   initialBogs,
-  getAllBlogs
+  getAllBlogs,
+  getBlog
 };

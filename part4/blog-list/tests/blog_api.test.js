@@ -103,6 +103,29 @@ test('a specific blog can be deleted', async () => {
     .expect(204);
 });
 
+test('a specific blog can be updated', async () => {
+  const response = await api.get('/api/blogs');
+  const blog = response.body[0];
+
+  const updatedBlog = {
+    likes: 999
+  };
+
+  await api
+    .put(`/api/blogs/${blog.id}`)
+    .send(updatedBlog)
+    .expect(200);
+
+  const expectedResult = {
+    ...blog,
+    likes: updatedBlog.likes
+  };
+  
+  const updatedBlogFromDatabase = await helper.getBlog(blog.id);
+
+  expect(updatedBlogFromDatabase).toMatchObject(expectedResult);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
