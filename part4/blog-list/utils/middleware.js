@@ -8,6 +8,18 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+const errorHandler = (error, request, response, next) => {
+  logger.error('Error name:', error.name);
+  logger.error('Error message:', error.message);
+  
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message });
+  } else {
+    return response.status(500).end();
+  }
+};
+
 module.exports = {
-  requestLogger
+  requestLogger,
+  errorHandler
 };

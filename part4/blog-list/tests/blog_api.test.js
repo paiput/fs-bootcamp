@@ -126,6 +126,30 @@ test('a specific blog can be updated', async () => {
   expect(updatedBlogFromDatabase).toMatchObject(expectedResult);
 });
 
+test('invalid users are not created', async () => {
+  const invalidUsers = [
+    {
+      username: 'pi',
+      name: 'paiput',
+      password: '12345'
+    },
+    {
+      username: 'jimmy123',
+      name: 'Jimmy',
+      password: 'hi'
+    }
+  ];
+
+  for (const user of invalidUsers) {
+    const result = await api
+      .post('/api/users')
+      .send(user)
+      .expect(400);
+    
+    expect(result.body.error).toMatch('User validation failed');
+  }
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
