@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 usersRouter.get('/', async (request, response, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate('blogs', { user: 0 });
     response.json(users);
   } catch(error) {
     next(error);
@@ -14,6 +14,12 @@ usersRouter.get('/', async (request, response, next) => {
 usersRouter.post('/', async (request, response, next) => {
   try {
     const body = request.body;
+
+    const existingUser = await User.findOne({ username: body.username });
+
+    if (existingUser) {
+      return response.status(400).json({ error: 'User already exists' });
+    }
  
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltRounds);
