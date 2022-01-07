@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
-const User = require('../models/User');
 
 blogsRouter.get('/', async (request, response, next) => {
   try {
@@ -15,12 +13,10 @@ blogsRouter.get('/', async (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   try {
     const blog = request.body;
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-    const user = await User.findById(decodedToken.id);
+    const user = request.user;
 
     if (!blog.title && !blog.url) {
-      return response.status(400).end();
+      return response.status(400).json({ error: 'need at least title or url' });
     }
     
     const newBlog = new Blog({
@@ -41,12 +37,9 @@ blogsRouter.post('/', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
     const blogId = request.params.id;
-
     const blogToDelete = await Blog.findById(blogId);
-    const user = await User.findById(decodedToken.id);
+    const user = request.user;
 
     if (blogToDelete.user.toString() !== user.id.toString()) {
       return response.status(401).json({ error: 'only the user who created the blog can delete it' });
