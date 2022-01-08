@@ -40,12 +40,12 @@ const initialBogs = [
 ];
 
 const getAllBlogs = async () => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate('user');
   return blogs;
 };
 
 const getBlog = async (id) => {
-  const blog = await Blog.findById(id);
+  const blog = await Blog.findById(id).populate('user');
   return blog;
 };
 

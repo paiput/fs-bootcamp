@@ -15,6 +15,10 @@ blogsRouter.post('/', async (request, response, next) => {
     const blog = request.body;
     const user = request.user;
 
+    if (!user) {
+      return response.status(401).json({ error: 'missing or invalid token' });
+    }
+
     if (!blog.title && !blog.url) {
       return response.status(400).json({ error: 'need at least title or url' });
     }

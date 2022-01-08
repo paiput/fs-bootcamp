@@ -6,12 +6,27 @@ const app = require('../app');
 const api = supertest(app);
 
 const Blog = require('../models/Blog');
+const User = require('../models/User');
+
+const getUser = async ({ username, password }) => {
+  const response = await api
+  .post('/api/login')
+  .send({ username, password });
+
+  const user = response.body;
+  return user;
+};
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+  // all blogs are created by user johndoe
+  const user = await User.findOne({ username: 'johndoe' });
 
   for (let blog of helper.initialBogs) {
-    const newBlog = new Blog(blog);
+    const newBlog = new Blog({
+      ...blog,
+      user: user.id
+    });
     await newBlog.save();
   }
 });
@@ -35,7 +50,9 @@ test('unique identifier property of blog is named id', async () => {
   expect(exampleBlog.id).toBeDefined();
 });
 
-test('a valid blog can be created', async () => {
+test('a valid blog can be created by a user', async () => {
+  const user = await getUser({ username: 'johndoe', password: 'johndoe' });
+
   const newBlog = {
     title: 'Creativity Is a Process, Not an Event',
     author: 'James Clear',
@@ -45,6 +62,7 @@ test('a valid blog can be created', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `bearer ${user.token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
@@ -57,6 +75,8 @@ test('a valid blog can be created', async () => {
 });
 
 test('likes default value of new blog is set to 0', async () => {
+  const user = await getUser({ username: 'johndoe', password: 'johndoe' });
+
   // new blog without likes property
   const newBlog = {
     title: 'How Innovative Ideas Arise',
@@ -66,6 +86,7 @@ test('likes default value of new blog is set to 0', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `bearer ${user.token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
@@ -83,6 +104,8 @@ test('likes default value of new blog is set to 0', async () => {
 });
 
 test('if title AND url are missing returns status code 400 bad request', async () => {
+  const user = await getUser({ username: 'johndoe', password: 'johndoe' });
+  
   const newBlog = {
     author: 'James Clear',
     likes: 32
@@ -90,20 +113,26 @@ test('if title AND url are missing returns status code 400 bad request', async (
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `bearer ${user.token}`)
     .send(newBlog)
     .expect(400)
 });
 
 test('a specific blog can be deleted', async () => {
+  const user = await getUser({ username: 'johndoe', password: 'johndoe' });
+
   const response = await api.get('/api/blogs');
   const blog = response.body[0];
 
   await api
     .delete(`/api/blogs/${blog.id}`)
+    .set('Authorization', `bearer ${user.token}`)
     .expect(204);
 });
 
 test('a specific blog can be updated', async () => {
+  const user = await getUser({ username: 'johndoe', password: 'johndoe' });
+
   const response = await api.get('/api/blogs');
   const blog = response.body[0];
 
@@ -113,6 +142,7 @@ test('a specific blog can be updated', async () => {
 
   await api
     .put(`/api/blogs/${blog.id}`)
+    .set('Authorization', `bearer ${user.token}`)
     .send(updatedBlog)
     .expect(200);
 
@@ -134,7 +164,7 @@ test('invalid users are not created', async () => {
       password: '12345'
     },
     {
-      username: 'jimmy123',
+      username: 'jj',
       name: 'Jimmy',
       password: 'hi'
     }
@@ -148,6 +178,20 @@ test('invalid users are not created', async () => {
     
     expect(result.body.error).toMatch('User validation failed');
   }
+});
+
+test('creating new blog fails if token is not provided', async () => {
+  const newBlog = {
+    title: 'How Experts Figure Out What to Focus On',
+    author: 'James Clear',
+    url: 'https://jamesclear.com/getting-simple',
+    likes: 13
+  };
+  
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
 });
 
 afterAll(() => {

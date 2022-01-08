@@ -11,7 +11,7 @@ const requestLogger = (request, response, next) => {
 };
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization');
+  const authorization = request.get('Authorization');
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7);
   }
@@ -35,6 +35,7 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'JsonWebTokenError') {
     return response.status(401).json({ error: 'missing or invalid token' });
   } else {
+    logger.error(error);
     return response.status(500).end();
   }
 };
