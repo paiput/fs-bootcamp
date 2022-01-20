@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import blogService from '../services/blogs';
+import Notification from './Notification';
 
 const BlogForm = ({ setBlogs }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const handleTitleChange = event => {
     setTitle(event.target.value);
@@ -19,22 +22,35 @@ const BlogForm = ({ setBlogs }) => {
   };
 
   const handleFormSubmit = async event => {
-    event.preventDefault();
-    const blog = {
-      title,
-      author,
-      url
-    };
-    const newBlog = await blogService.create(blog);
-    setBlogs(prevValue => prevValue.concat(newBlog));
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    try {
+      event.preventDefault();
+      const blog = {
+        title,
+        author,
+        url
+      };
+      const newBlog = await blogService.create(blog);
+      setBlogs(prevValue => prevValue.concat(newBlog));
+      setSuccessMsg(`a new blog: ${newBlog.title} by ${newBlog.author} added to bloglist`);
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+      setTimeout(() => {
+        setSuccessMsg('');
+      }, 5000);
+    } catch(error) {
+      setErrorMsg(error.response.data.error);
+      setTimeout(() => {
+        setErrorMsg('');
+      }, 5000);
+    }
   };
   
   return (
     <div>
       <h2>create new</h2>
+      {errorMsg && <Notification type="danger" msg={errorMsg} />}
+      {successMsg && <Notification type="success" msg={successMsg} />}
       <form onSubmit={handleFormSubmit}>
         <div>
           <label htmlFor="title-input">title:</label>
