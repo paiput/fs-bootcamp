@@ -17,9 +17,7 @@ const Blog = ({ blog }) => {
 
   const handleLike = async () => {
     const blogUpdate = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id
+      likes: blog.likes += 1
     };
     const updatedBlog = await blogService.update(blog.id, blogUpdate);
     setBlogLikes(updatedBlog.data.likes);
