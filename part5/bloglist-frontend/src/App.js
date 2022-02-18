@@ -32,7 +32,6 @@ const App = () => {
   };
 
   const addBlog = async blogObject => {
-    console.log(blogFormRef.current)
     try {
       blogFormRef.current.toggleVisibility();
       const newBlog = await blogService.create(blogObject);
@@ -70,7 +69,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} loggedUser={user} setBlogs={setBlogs} />
       )}
     </div>
   );

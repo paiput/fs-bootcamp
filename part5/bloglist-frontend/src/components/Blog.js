@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, loggedUser, setBlogs }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [blogLikes, setBlogLikes] = useState(blog.likes);
 
@@ -23,6 +23,15 @@ const Blog = ({ blog }) => {
     setBlogLikes(updatedBlog.data.likes);
   };
 
+  const handleDelete = async () => {
+    if (window.confirm(`Remove blog ${blog.title}`)) {
+      await blogService.remove(blog.id);
+      setBlogs(blogs => blogs.filter(eachBlog => eachBlog.id !== blog.id));
+    } else {
+      return;
+    }
+  };
+
   return (
     <div style={blogStyle}>
       <p>{blog.title} <button onClick={toggleVisibility}>{showDetails ? 'hide' : 'view'}</button></p>
@@ -30,6 +39,9 @@ const Blog = ({ blog }) => {
         <li><a href={blog.url}>{blog.url}</a></li>
         <li>likes {blogLikes} <button onClick={handleLike}>like</button></li>
         <li>{blog.author}</li>
+        {loggedUser.username === blog.user.username
+          ? <button onClick={handleDelete}>remove</button>
+          : null}
       </ul>
     </div>  
   );
