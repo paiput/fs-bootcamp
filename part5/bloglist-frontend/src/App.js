@@ -20,7 +20,9 @@ const App = () => {
       const user = JSON.parse(loggedUser);
       setUser(user);
       blogService.setToken(user.token);
-      blogService.getAll().then(blogs => setBlogs(blogs));
+      blogService.getAll().then(blogs => {
+        setBlogs(blogs.sort((a, b) => b.likes - a.likes));
+      });
     }
   }, []);
 
