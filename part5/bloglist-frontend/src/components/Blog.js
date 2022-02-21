@@ -43,7 +43,7 @@ const Blog = ({ blog, loggedUser, setBlogs }) => {
           ? <button onClick={handleDelete}>remove</button>
           : null}
       </ul>
-    </div>  
+    </div>
   );
 };
 

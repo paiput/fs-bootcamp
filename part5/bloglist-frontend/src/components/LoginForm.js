@@ -7,7 +7,7 @@ const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  
+
   const handleUsernameChange = event => {
     setUsername(event.target.value);
   };
@@ -20,8 +20,8 @@ const LoginForm = ({ setUser }) => {
     try {
       event.preventDefault();
       const user = await loginService.login({ username, password });
-      localStorage.setItem('loggedUser', JSON.stringify(user))
-      blogService.setToken(user.token)
+      localStorage.setItem('loggedUser', JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');

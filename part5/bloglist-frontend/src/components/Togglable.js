@@ -32,4 +32,6 @@ Togglable.propTypes = {
   buttonLabel: ProptTypes.string.isRequired
 };
 
+Togglable.displayName = 'Togglable';
+
 export default Togglable;

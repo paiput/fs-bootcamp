@@ -38,29 +38,29 @@ const BlogForm = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title-input">title:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="title-input"
-            value={title} 
-            onChange={handleTitleChange} 
+            value={title}
+            onChange={handleTitleChange}
           />
         </div>
         <div>
           <label htmlFor="author-input">author:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="author-input"
-            value={author} 
-            onChange={handleAuthorChange} 
+            value={author}
+            onChange={handleAuthorChange}
           />
         </div>
         <div>
           <label htmlFor="url-input">url:</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="url-input"
-            value={url} 
-            onChange={handleUrlChange} 
+            value={url}
+            onChange={handleUrlChange}
           />
         </div>
         <button type="submit">create</button>
