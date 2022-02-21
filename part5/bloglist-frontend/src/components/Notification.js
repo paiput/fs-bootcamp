@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const Notification = ({ msg, type }) => {
   const style = {
     border: type === 'success' ? '2px solid green' : '2px solid red',
@@ -10,6 +12,11 @@ const Notification = ({ msg, type }) => {
       <p style={style}>{msg}</p>
     </div>
   );
+};
+
+Notification.propTypes = {
+  msg: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default Notification;
