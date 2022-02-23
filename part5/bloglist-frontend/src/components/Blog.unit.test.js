@@ -1,16 +1,19 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Blog from './Blog';
 
-test('component displaying a blog only renders blog\'s title by default', () => {
-  const blog = {
-    title: 'Some random title',
-    author: 'John Doe',
-    likes: 25,
-    user: 'someuser'
-  };
+const blog = {
+  title: 'Some random title',
+  author: 'John Doe',
+  likes: 25,
+  user: {
+    username: 'someuser'
+  }
+};
 
+test('component displaying a blog only renders blog\'s title by default', () => {
   render(<Blog blog={blog} loggedUser={{ username: 'someuser' }} />);
 
   const blogInfo = screen.getByTestId('blog-info');
@@ -18,6 +21,14 @@ test('component displaying a blog only renders blog\'s title by default', () => 
 
   const blogTitle = screen.getByText('Some random title');
   expect(blogTitle).toBeDefined();
+});
 
-  screen.debug();
+test('the rest of blog info is shown when the button controlling the shown details has been clicked', () => {
+  render(<Blog blog={blog} loggedUser={{ username: 'someuser' }} />);
+
+  const button = screen.getByText('view');
+  userEvent.click(button);
+
+  const blogInfo = screen.getByTestId('blog-info');
+  expect(blogInfo).toBeVisible();
 });
