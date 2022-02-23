@@ -32,3 +32,16 @@ test('the rest of blog info is shown when the button controlling the shown detai
   const blogInfo = screen.getByTestId('blog-info');
   expect(blogInfo).toBeVisible();
 });
+
+test('if like button is clicked twice, the event handler is called twice', () => {
+  render(<Blog blog={blog} loggedUser={{ username: 'someuser' }} />);
+
+  const viewButton = screen.getByText('view');
+  userEvent.click(viewButton);
+
+  const likeButton = screen.getByText('like');
+  userEvent.click(likeButton);
+  userEvent.click(likeButton);
+
+  expect(blog.likes).toBe(27);
+});
