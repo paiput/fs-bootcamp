@@ -8,7 +8,7 @@ const Notification = ({ msg, type }) => {
   };
 
   return (
-    <div>
+    <div className='notification'>
       <p style={style}>{msg}</p>
     </div>
   );
