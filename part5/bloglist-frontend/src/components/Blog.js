@@ -34,10 +34,10 @@ const Blog = ({ blog, loggedUser, setBlogs }) => {
 
   return (
     <div style={blogStyle}>
-      <p>{blog.title} <button onClick={toggleVisibility}>{showDetails ? 'hide' : 'view'}</button></p>
+      <p>{blog.title} <button id='toggle-blog-button' onClick={toggleVisibility}>{showDetails ? 'hide' : 'view'}</button></p>
       <ul data-testid='blog-info' style={{ display: showDetails ? 'block' : 'none' }}>
         <li><a href={blog.url}>{blog.url}</a></li>
-        <li>likes {blogLikes} <button onClick={handleLike}>like</button></li>
+        <li className='likes-counter'>likes {blogLikes} <button id='like-blog-button' onClick={handleLike}>like</button></li>
         <li>{blog.author}</li>
         {loggedUser.username === blog.user.username
           ? <button onClick={handleDelete}>remove</button>

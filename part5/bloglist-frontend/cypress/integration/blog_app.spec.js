@@ -37,18 +37,28 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('paiput');
-      cy.get('#password').type('paiputpassword');
-      cy.contains('login').click();
+      cy.login({ username: 'paiput', password: 'paiputpassword' });
     });
 
-    it('A blog can be created', function() {
+    it('a blog can be created', function() {
       cy.contains('new blog').click();
       cy.get('#title-input').type('Blog created in cypress');
       cy.get('#author-input').type('paiputtester');
       cy.get('[type="submit"]').click();
 
       cy.contains('Blog created in cypress');
+    });
+
+    describe('And blog was created', function() {
+      beforeEach(function() {
+        cy.createBlog({ title: 'Blog created in cypress', author: 'paiputtester' });
+      });
+
+      it('user can like a blog', function() {
+        cy.get('#toggle-blog-button').click();
+        cy.get('#like-blog-button').click();
+        cy.get('.likes-counter').should('contain', 'likes 1');
+      });
     });
   });
 });
