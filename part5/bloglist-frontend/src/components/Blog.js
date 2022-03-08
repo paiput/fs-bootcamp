@@ -33,7 +33,7 @@ const Blog = ({ blog, loggedUser, setBlogs }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <p>{blog.title} <button id='toggle-blog-button' onClick={toggleVisibility}>{showDetails ? 'hide' : 'view'}</button></p>
       <ul data-testid='blog-info' style={{ display: showDetails ? 'block' : 'none' }}>
         <li><a href={blog.url}>{blog.url}</a></li>

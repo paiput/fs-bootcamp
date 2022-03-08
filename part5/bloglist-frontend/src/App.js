@@ -68,9 +68,13 @@ const App = () => {
           errorMsg={errorMsg}
         />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} loggedUser={user} setBlogs={setBlogs} />
-      )}
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {blogs.map(blog =>
+          <li className='list-item' key={blog.id}>
+            <Blog blog={blog} loggedUser={user} setBlogs={setBlogs} />
+          </li>
+        )}
+      </ul>
     </div>
   );
 };

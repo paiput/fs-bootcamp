@@ -60,5 +60,28 @@ describe('Blog app', function() {
         cy.get('.likes-counter').should('contain', 'likes 1');
       });
     });
+
+    describe('And many blogs where created', function() {
+      beforeEach(function() {
+        cy.createBlog({ title: 'Blog 1', author: 'paiputtester', likes: 5 });
+        cy.createBlog({ title: 'Blog 2', author: 'paiputtester', likes: 9 });
+        cy.createBlog({ title: 'Blog 3', author: 'paiputtester', likes: 1 });
+      });
+
+      it.only('blogs are ordered by likes', function() {
+        cy.get('.list-item > .blog').then(blogs => {
+          blogs.map((index, blog) => {
+            cy.wrap(blog)
+              .within(() => {
+                cy.get('#toggle-blog-button').click();
+                if (index === 0) cy.contains('likes 9');
+                else if (index === 1) cy.contains('likes 5');
+                else cy.contains('likes 1');
+              });
+          });
+        });
+
+      });
+    });
   });
 });
